@@ -1,16 +1,65 @@
 ---
-title: RADIUS Server Basics
+title: RADIUS Server and AAA Basics
 date: "2022-05-01"
 description: A simple explaination of AAA servers, specifically freeRADIUS, and how to get starting using them.
-tldr: 
+tldr: FreeRadius is an OSS implementation of a RADIUS server, which is a server that implements the RADIUS protocol to achieve AAA (Authorization, Authentication, Accounting).
 draft: true
 ---
 
 ***free***Radius??? Maybe for you.... It has cost me everything.
 
+
+# What is RADIUS?
+
+RADIUS is a network protocol.
+
+Servers that accept and send the RADIUS protocol are called radius servers.
+
+Everyone who has used the internet has probably interacted with a radius server. They are commonly used by ISPs, cellular network providers, and corporate/educational networks.
+
+The primary functions of RADIUS is usually referred to as AAA.
+
+1. Authentication
+    - are the users/devices who they say they are?
+    - validate some credentials
+2. Authorization
+    - are the users/devices allowed to use the network?
+3. Accounting
+    - track the usage of the network by users/devices
+    
+For example, Eduroam uses RADIUS servers.
+
+If you’re trying to wrap your mind around OpenRoaming, just think about how Eduroam works.
+
+https://eduroam.org/how/
+
+https://wballiance.com/openroaming/how-it-works/
+
 # Quick Summary
 
-### Step 1 → ****Picking an Auth-Type (authorization)****
+The most commonly used radius server is the freeRadius server. 
+
+Setting up a freeRadius server consists of editing various configuration files, and including the right files. 
+To run a freeRadius server you must put the config files in a file system on a machine or a container where freeRadius is expecting them, install the freeRadius software, and then run it.
+
+Here is an example directory for a freeRadius configuration:
+
+```
+mods-available/
+mods-enabled/
+sites-available/
+sites-enabled/
+clients.conf
+proxy.conf
+radiusd.conf
+```
+
+Both `mods-available` and `sites-available` contain configuration files that aren't used and then `sites-available` and `mods-available` are actually used.
+
+The rest of the conf files allow to define how the server listens to requests and what it does with with them.
+
+	
+## Step 1 → Deciding the Authorization Method
 
 The radius server receives a request and decides what to do with it. It decides based on:
 
@@ -31,7 +80,7 @@ A module will find a match by searching the request for key attributes, such as 
 
 If the module does find a match, it sets the `Auth-Type` to itself.
 
-### Step 2 → ****Authenticating a user (authentication)****
+## Step 2 → Authenticating a User
 
 At the end of the authorize step, the server will check if anything set the `Auth-Type` if not, it will immediately reject the request.
 
@@ -40,30 +89,6 @@ For example, suppose that the user sent a request with a `User-Password` attribu
 So it then compares the local "known good" password to the password as entered by the user. This is how authentication works.
 
 If anything is missing or in the wrong form?  → reject
-
-# What is RADIUS?
-
-RADIUS is a network protocol.
-
-Servers that accept and send the RADIUS protocol are called radius servers.
-
-Everyone who has used the internet has probably interacted with a radius server. They are commonly used by ISPs, cellular network providers, and corporate/educational networks.
-
-The primary functions of RADIUS is usually referred to as AAA.
-
-1. Authentication
-    - are the users/devices who they say they are?
-    - validate some credentials
-2. Authorization
-    - are the users/devices allowed to use the network?
-3. Accounting
-    - track the usage of the network by users/devices
-    
-
-For example, Eduroam uses RADIUS servers.
-
-If you’re trying to wrap your mind around Open Roaming, just think about how Eduroam works.
-
 
 ## Network Access Server
 
