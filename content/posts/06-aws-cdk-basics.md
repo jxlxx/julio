@@ -1,9 +1,10 @@
 ---
 title: AWS CDK Basics
-date: "2022-05-01"
+date: "2022-07-20"
 description: A quick guide on getting started with AWS Cloud Development Kits
 tldr: 
 draft: true
+tags: ["aws", "devops"]
 ---
 
 # What is CDK?

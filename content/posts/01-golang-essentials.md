@@ -7,6 +7,10 @@ draft: true
 tags: ["golang"]
 ---
 
+This is a short and simple of the most essential concepts you to know about go to have a good time.
+
+
+
 # Channels
 
 # Goroutines

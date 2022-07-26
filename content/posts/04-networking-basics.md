@@ -1,33 +1,33 @@
 ---
 title: Networking Basics
-date: "2022-05-01"
+date: "2022-06-01"
 description: Some basic hardware involved in networking, and some other stuff too.
-tldr: 
-draft: true	
+draft: false	
+tags: ["networking"]
 ---
 
 # Hardware Basics
 
 A **router** is a network device (that may be composed of many virtual network devices) that connects multiple devices, phones, computers, etc, to form a local area network (LAN). Most routers allow device to connect wirelessly, or through ethernet.
 
-An **access point** (AP) allows devices to connect wirelessly to a LAN and can also be used to extend the range of coverage to connect to a LAN (you can be physically farther away). The AP then also has a high-speed ethernet cable runs to a router.
+An **access point** (AP) allows devices to connect wirelessly to a **LAN** (Local Area Network) and can also be used to extend the range of coverage to connect to a LAN (you can be physically farther away). The AP then also has a high-speed ethernet cable runs to a router.
 
 A router acts as a hub for a LAN, and an AP is a sub-device in the LAN. Wireless routers can act as APs, but not all APs can act as routers.
 
-A **modem** is a device that connects your LAN to a WAN (wide area network). It is the thing that takes the digital signals that devices send to routers (binary data) and transforms it via modulation into analog data (electricity) that gets transmitted to the WAN. It also receives analog data and demodulates it, so the router can send it to the devices that asked for it. 
+A **modem** is a device that connects your LAN to a WAN (Wide Area Network). It is the thing that takes the digital signals that devices send to routers (binary data) and transforms it via modulation into analog data (electricity) that gets transmitted to the WAN. It also receives analog data and demodulates it, so the router can send it to the devices that asked for it. 
 
 It is not uncommon to see router/modem combos.
 
-A switch is a networking device that connects devices together. The word switch usually means a device that forwards data between devices at the layer 2 level using MAC addresses. There is such a thing as layer 3 switches, which incorporate some routing functionality.
-
-Routers usually have a kind of switch built-in to them. At this point discussing the difference between L2 switches, L3 switches, and routers etc. bores me, so I will stop.
+A **switch** is a networking device that connects devices together. Usually physically, via ethernet cables. The word switch usually means a device that forwards data between devices at the layer 2 level using MAC addresses. There is such a thing as layer 3 switches, which incorporate some routing functionality. Routers usually have a kind of switch built-in to them. At this point discussing the difference between L2 switches, L3 switches, and routers etc, is beyond the basics, so I will stop.
 
 # Layers (OSI Model)
 
 Layered Network Model (ISO/OSI)
 
-| 7 | Application | What the user interacts with, http, ftp |
+
+| # | Name | things |
 | --- | --- | --- |
+| 7 | Application | What the user interacts with, http, ftp |
 | 6 | Presentation | encrypt, decrypt |
 | 5 | Session | channels, called sessions, between devices. Can be used to sync audio and video |
 | 4 | Transport | TCP, UDP |
@@ -67,6 +67,8 @@ In IPv4, the loopback address is `127.0.0.1`.
 There’s an IPv4-compatibility mode for IPv6 addresses. To represent the IPv4 address `192.0.2.33` as an IPv6 address you write it like this: `::ffff:192.0.2.33`
 
 ## CIDR Notation
+
+TODO
 
 # Packets, Etc.
 
@@ -126,23 +128,11 @@ A socket address is usually a combination of a file descriptor, an IP address an
 
 # How to get to `https://julio.lol`
 
-- enter a website into the browser
-- have to go from website name to IP address
-- DNS name server
-- Routers then route the packet
-- LAN to router to WAN, ISP has some systems, cables under the ocean, etc
-
-# How to get a website online
-
-DNS - Domain Name System, ”the phonebook of the internet”
-
-CNAME 
-
-A Record
-
-put it on a server
+TODO
 
 # WiFi networks
+
+TODO
 
 # Good Software/Sites for Experimentation
 
@@ -152,3 +142,12 @@ put it on a server
 - wireshark
 - traceroute
 - dig
+
+# Other Stuff
+
+[Beej's Guide to Network Programming](https://beej.us/guide/bgnet/)
+
+[jvns Networking Zine](https://jvns.ca/networking-zine-coloured.pdf)
+
+[High Performance Browser Networking (O'Reilly)](https://hpbn.co/)
+

@@ -1,23 +1,21 @@
 ---
 title: How to use Protobuf with Golang & Kafka 
-date: "2022-06-01"
+date: "2022-04-06"
 description: "A quickstart on publishing protocol buffers in Kafka messages. "
-draft: true
+draft: false
+tags: ["kafka", "golang", "protobuf"]
 ---
-
-> **Disclaimer**: I am just learning all this stuff, so this is definitely not the best way to do things, but nevertheless it is a way to do things. Since there's not too much documentation on the intersection of these technologies, I decide to post my notes I was writing as I was figuring this stuff out (with some extra explanations). If you have any tips, advice, questions, corrections **you are super welcome drop a message/comment**.
-
 
 # TLDR;
 - Download `protoc` and `protogen-go`
-- Create a `.proto` file with a structure definition, this is called defining a message type
+- Create a `.proto` file with a structure definition, this is called defining a message type
 - Use the protoc compiler to generate a `*.pb.go` file (which is the golang source code that contains all your functionality related to your message type)
-- Instances of a message type are called messages: `msg := pb.ExampleType{}`
-- Set data like this: `msg := pb.ExampleType{FieldName : <data>}`
+- Instances of a message type are called messages: `msg := pb.ExampleType{}`
+- Set data like this: `msg := pb.ExampleType{FieldName : <data>}`
 - Add/update data like this: `msg.FieldName = <data>`
 - Debug printing is done with: `proto.Message(&msg)`
 - Serialize your message: `proto.Marshal(&msg)`
-- Publish to Kafka topic: `Kafka.Message{… Value: serialized_message ….})`
+- Publish to Kafka topic: `Kafka.Message{… Value: serialized_message ….})`
 - Kafka subscriber receives this Kafka message, deserializes the data via: `proto.Unmarshal(kafkaMessage.Value, &msg))`
 - Access fields like this: `&msg.GetFieldName()`
 - bingo bongo that's it
@@ -84,13 +82,13 @@ As advised by the `readme.txt`, copy the content of the include directory to `/u
 sudo cp -r include/google /usr/local/include
 sudo cp bin/protoc /usr/bin
 ```
-The compiler, `protoc`, takes a `*.proto` file with protocol buffer definition in it and then generates the source code that you use with your applications code. I had a lot of problems with setting up `protoc`, all path related and really annoying and boring. So I instead did a quick hack, to get up and running quickly.
+The compiler, `protoc`, takes a `*.proto` file with protocol buffer definition in it and then generates the source code that you use with your applications code. I had a lot of problems with setting up `protoc`, all path related and really annoying and boring. So I instead did a quick hack, to get up and running quickly.
 
 **If you have protoc working, skip the next section.**
 
-# Resolving my protoc issues in kind of a gross way
+# Resolving my protoc issues in kind of a gross way
 
-I tried a slew of things, but I continued to have issues with `protoc` and paths to things. Since I have better things to do, I did this just to get up and running quickly. I have since changed thigs on my machine which maybe means I don't have to go this route anymore, but honestly who cares. This way I never have to care about my paths and all my `*.proto` files are together, and it's easy to move them where they need to be.
+I tried a slew of things, but I continued to have issues with `protoc` and paths to things. Since I have better things to do, I did this just to get up and running quickly. I have since changed things on my machine which maybe means I don't have to go this route anymore, but honestly who cares. This way I never have to care about my paths and all my `*.proto` files are together, and it's easy to move them where they need to be.
 -  I created a directory (`/protobuf-generator`) where all my other Go repos live (I don't use `~/go` because I like making life harder for myself) 
 - and to that I added `/github.com` (from `github.com/protocolbuffers/protobuf`, just for the example directory from the official tutorial),
 - then I added `/google` (from `google.golang.org/protobuf/protec-gen-go`, the actual plugin),
@@ -162,7 +160,9 @@ If you check `$GOBIN`, you should have the binary of the `protoc-gen-go` plugin.
 So with all this you can generate protobuf classes and use types in your message definitions provided by protobuf, like `timestamp` (`"google/protobuf/timestamp.proto"`). And use the `example/tutorial` from the official protobuf/Go tutorial.
 
 # Generating protobufs files (*.pb.go)
-Creating `*.proto files` is easy and fun. The tutorial is really clear on this front. Here's an example from the official Go/protobuf tutorial, with all the essentials:
+
+Creating `*.proto files` is easy and fun. The tutorial is really clear on this front. Here's an example from the official Go/protobuf tutorial, with all the essentials:
+
 ```
 syntax = "proto3";
 package tutorial;
@@ -201,7 +201,7 @@ $ protoc -I ./ --go_out=./ ./example.proto
 
 For the most part it's really easy, but I have not needed to do anything complex with them yet. For general information on defining message types see: https://developers.google.com/protocol-buffers/docs/gotutorial
 
->  💡 **I repeat, look at this:** `https://developers.google.com/protocol-buffers/docs/gotutorial` I don't explain much on this stuff.
+>  💡 **I repeat, look at this:** [developers.google.com/protocol-buffers](https://developers.google.com/protocol-buffers/docs/gotutorial) I don't explain much on this stuff.
 
 And you're all done with setup, now you have your protobuf class ready and you can begin using protobufs within your project!
 
@@ -237,7 +237,7 @@ message Example {
 		repeated int32 lot_of_numbers = 1;
 }
 ```
-## Enums (defining and setting)
+## Enums (defining and setting)
 Defined like this:
 ```
 message Convo {

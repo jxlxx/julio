@@ -1,9 +1,10 @@
 ---
 title: AWS Technical Essentials Course Notes
-date: "2022-05-01"
+date: "2022-05-23"
 description: Some notes I took on a beginners course in AWS.
 tldr: 
-draft: true
+draft: false
+tags: ["aws"]
 ---
 
 # **Module 1: Introduction to Amazon Web Services**
