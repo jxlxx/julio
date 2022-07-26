@@ -2,8 +2,7 @@
 title: AWS CDK Basics
 date: "2022-07-20"
 description: A quick guide on getting started with AWS Cloud Development Kits
-tldr: 
-draft: true
+draft: false
 tags: ["aws", "devops"]
 ---
 
@@ -75,7 +74,7 @@ lib/name-stack.ts # where you spend most of your time
 
 bin/name.ts # enypoint of the CDK app
             # loads the stack defined in ^^
-						# call stuff in lib and instantiate it
+            # call stuff in lib and instantiate it
 
 package.json  # npm module manifest, build/run scripts etc
 
@@ -164,8 +163,6 @@ Then I ran `cdk synth` to see if everything looked good.
 
 Then I ran `cdk bootstrap` which creates a “bootstrap stack” for the app.
 
-![Screen Shot 2022-07-20 at 8.30.15 AM.png](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/6da91651-740e-4202-9873-da7477ef116a/Screen_Shot_2022-07-20_at_8.30.15_AM.png)
-
 Now I have a bunch of roles, a bucket, etc.
 
 Finally, I do:
@@ -173,10 +170,6 @@ Finally, I do:
 ```bash
 cdk deploy
 ```
-
-and then this is what it looks like:
-
-![Screen Shot 2022-07-20 at 8.33.27 AM.png](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/ed212667-ed30-4da6-9b9f-317db595a19c/Screen_Shot_2022-07-20_at_8.33.27_AM.png)
 
 Now lets add some changes:
 
@@ -199,8 +192,6 @@ export class CdkWorkshopStack extends cdk.Stack {
 ```
 
 And then run `cdk diff`:
-
-![Screen Shot 2022-07-20 at 9.40.06 AM.png](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/6d63a9b4-bbcb-4fdd-9cda-472103ba5088/Screen_Shot_2022-07-20_at_9.40.06_AM.png)
 
 # What else can you do?
 
@@ -245,7 +236,7 @@ Drift is when you cloud formation templates don’t match your actual stack.
 
 `cdk destroy`
 
-- 💀 destroys stuff
+- destroys stuff 💀 
 
 # What is AWS Lambda
 
@@ -263,9 +254,6 @@ What do you need:
 
 A layer is a ZIP archive that contains libraries, a custom runtime, or other dependencies. With layers, you can use libraries in your function without needing to include them in your deployment package.
 
-Here is an example lambda function that does nothing.
-
-![Screen Shot 2022-07-20 at 9.52.02 AM.png](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/cfaa9078-d0d9-4b76-960c-b00eddb6181e/Screen_Shot_2022-07-20_at_9.52.02_AM.png)
 
 # Let’s use lambda
 
@@ -274,9 +262,9 @@ Adding an AWS lambda function
 1. create a directory `lambda` in the root of the CDK app
 2. add a line to `.gitignore` to NOT ignore all the `.js` files in lambda
     
-    ```bash
-    !lambda/*
-    ```
+```
+!lambda/*
+```
     
 3. add the following js file, `lambda/hello.js`
 
@@ -362,10 +350,8 @@ export class CdkWorkshopStack extends cdk.Stack {
 
 # Life Lessons
 
+
 - GUIs suck (I always knew this actually)
-
-![061B488E-C47B-4541-9808-0BDDDEFB4D0E.png](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/680464c0-f650-4421-8f4e-2b526f92345d/061B488E-C47B-4541-9808-0BDDDEFB4D0E.png)
-
 - “use things the way they are intended to be used” - paraphrasing jim
     
     
@@ -404,4 +390,6 @@ Can create reusable definitions.
 
 # Fun Fact
 
-I went to a golang meetup last week and this guy pronounced `fmt` as fumpt 😳
+I went to a golang meetup last week and this guy pronounced `fmt` as *fumpt* 😳
+
+
