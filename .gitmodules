@@ -1,0 +1,3 @@
+[submodule "themes/manticore"]
+	path = themes/manticore
+	url = https://gitlab.com/wormperson69/manticore.git

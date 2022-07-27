@@ -1,7 +1,7 @@
 baseURL = 'https://julio.lol/'
 languageCode = 'en-us'
 title = 'julio.lol'
-theme = "archie"
+theme = "manticore"
 pygmentsstyle = "monokai"
 pygmentscodefences = true
 pygmentscodefencesguesssyntax = true
