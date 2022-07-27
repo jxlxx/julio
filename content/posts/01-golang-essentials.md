@@ -9,7 +9,7 @@ tags: ["golang"]
 
 This is a short and simple of the most essential concepts you to know about go to have a good time.
 
-
+My notes are in my notebook, I'm gonna put them in here I promise.
 
 # Channels
 

@@ -9,7 +9,7 @@ pygmentscodefencesguesssyntax = true
 [params]
 mode="toggle"
 useCDN=false
-subtitle = "Just a bunch of notes and garbage I post online"
+subtitle = "Just a bunch of notes and garbage I post online <CURRENTLY UNDER DEVELOPMENT !!!>"
 
 [[menu.main]]
 name = "Home"
