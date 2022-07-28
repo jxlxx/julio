@@ -143,6 +143,8 @@ TODO
 - traceroute
 - dig
 
+TODO: make these things links
+
 # Other Stuff
 
 [Beej's Guide to Network Programming](https://beej.us/guide/bgnet/)
