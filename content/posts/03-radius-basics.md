@@ -36,13 +36,22 @@ https://eduroam.org/how/
 
 https://wballiance.com/openroaming/how-it-works/
 
-Here is a quick sketch of what physical hardware is involved:
+Here is a quick sketch of the physical hardware is involved:
 
 | Component | Function | Hardware |
 | --- | --- | --- | 
 | User/device | Requests access to the network | laptop, phone, etc |
 | Network Access Server (NAS) | Provides access to the network | Router, Switch, Access Point, VPN Terminator, etc |
 | RADIUS Server | Receives authentication requests from the NAS. Returns authorization information to NAS. Recieves accounting information. | freeRADIUS, diameter, Radiator, ISE |
+
+An important word to note is a NAS. A user/client/device interacts with something refered to as a NAS (Network Access Server) which is something like a router (but could be other things) and that device is what reaches out to the Radius server.
+
+
+Another important word is **realm**. A realm tells radius what group/organization a user belongs to. Realms are reminisant of email addresses and are used in a somewhat similar way.
+
+The format of a realm is <SOME-STRING>@ 
+
+
 
 
 # What is FreeRadius?
@@ -73,15 +82,14 @@ raddb/
 
 Everything lives inside of a `raddb/` folder.
 
-`mods-available` directory contains sample configurations for all of the modules.
 
-`mods-enabled` enabled modules; sometimes these are just softlinks to the equivalent file in `mods-avaliable`
-
-`mods-config` extra configuration for modules
-
-`sites-available` directory contains sample "virtual servers". Most of these will not be used. They exist as documentation and as examples of "best practices".
-
-`sites-enabled` directory contains the configuration for "virtual servers" that are being used by the server.
+|  | |
+|---|---|
+|`mods-available`| directory contains sample configurations for all of the modules.|
+|`mods-enabled` | enabled modules; sometimes these are just softlinks to the equivalent file in `mods-avaliable`|
+|`mods-config` | extra configuration for modules|
+|`sites-available` | this contains sample "virtual servers". Most of these will not be used. They exist as documentation and as examples of "best practices".|
+|`sites-enabled` | this contains the configuration for "virtual servers" that are being used by the server.|
 
 The rest of the conf files allow to define how the server listens to requests and what it does with with them.
 
@@ -94,7 +102,7 @@ The `clients.conf` file defines RADIUS clients (usually a NAS, Access Point, etc
 
 In general the syntax of the configuration files looks something like this:
 
-```yml
+```
 
 server name_of_server {
 	an_authentication_mod
@@ -108,13 +116,43 @@ server name_of_server {
 
 But it depends on what you are configuring exactly.
 
-### Helpful FreeRadius Documentation 
 
+## Sections
+
+Configuration files are broken up into something called "sections" or sometimes "blocks."
+
+```
+this_is_a_section {
+
+}
+```
+
+Some important sections:
+- `server` 
+- `client`
+- `security`
+- `logging`
+- ... etc
+
+
+Some important subsections with a `server` section:
+- `authorize`
+- `authenticate`
+- `pre-accounting`
+- `accounting`
+- `post-accounting`
+- `proxy`
+- ... etc
+
+
+
+## Helpful FreeRadius Documentation 
 
 - [Technical Guide](https://networkradius.com/doc/FreeRADIUS%20Technical%20Guide.pdf)
 - [Getting Started FreeRadius](https://wiki.freeradius.org/guide/Getting%20Started)
 	
-## Authentication Method 
+
+# Authentication  
 
 The radius server receives a request and decides what to do with it. It decides based on:
 
@@ -176,24 +214,6 @@ Note that the NAS and server may use different dictionaries, which may cause pro
 
 Also note that servers require access to a vendor dictionary to understand vendor attributes.
 
-## The `raddb/` directory
-
-The `raddb` directory contains all the configuration for FreeRadius.
-
-The main configuration file for the server is `radiusd.conf`  This file loads the other configuration files via "include" statements.
-
-`raddb` contains several subdirectories, such as:
-
-`mods-available` directory contains sample configurations for all of the modules.
-
-`mods-enabled` enabled modules; sometimes these are just softlinks to the equivalent file in `mods-avaliable`
-
-`mods-config` extra configuration for modules
-
-`sites-available` directory contains sample "virtual servers". Most of these will not be used. They exist as documentation and as examples of "best practices".
-
-`sites-enabled` directory contains the configuration for "virtual servers" that are being used by the server.
-
 ## `radiusd.conf`
 
 The `radiusd.conf` file contains the server configuration.
@@ -202,15 +222,15 @@ The "unlang" policy language can be used to create complex `if / else` policies.
 
 The client configuration is defined in `clients.conf`.
 
-### Configuration File Syntax
+## Configuration File Syntax
 
 Configuration files are UTF-8 text.
 
-Line-orientated, everything has to be on a separate line.
+They are line-orientated, meaning everything has to be on a separate line.
 
 A configuration item is an internal variable that has a name and holds a value.
 
-```yml
+```
 variable = value
 ```
 
@@ -218,7 +238,7 @@ Variables have data types. The can be IP addresses, strings, number, etc.
 
 Portions of the configuration can be grouped in sections:
 
-```yml
+```
 texas {
   dallas = yes
   houston = no
@@ -228,13 +248,13 @@ texas {
 
 A configuration file can load another configuration file via the `$INCLUDE` statement:
 
-```yml
+```
 $INCLUDE other.conf
 ```
 
 Or a directories. Note that dotfiles `.imadotfile.conf` are ignored but editor “backup” files with tildes `~backup.conf` are not. Also this is how you reuse variable definitions:
 
-```yml
+```
 somedir = "hello"
 $INCLUDE ${somedir}/foo/bar/baz
 ```
@@ -245,19 +265,19 @@ This is different from run-time expansion, which is done like this: `%{...}`
 
 You can also use environment variables:
 
-```yml
+```
 $ENV{variable}
 ```
 
-And here’s convoluted one for fun: 
+And here’s weird one for fun: 
 
-```yml
+```
 ${reference1[name].reference2}
 ```
 
 Sections can have instance names:
 
-```yml
+```
 section-type instance-name {
     [ statements ]
 }
@@ -265,17 +285,23 @@ section-type instance-name {
 
 For example, the `client` section is used to define information about a client. When multiple clients are defined, they are distinguished by their `instance-name`.
 
-Booleans are weird in radius.
+### Booleans are weird in radius.
 
 The boolean data type contains a true or false value. The values `yes`, `on`, and `1` evaluate to *true.* The values `no`, `off`, and `0` evaluate to *false*.
 
-```yml
+```
 var = yes 
 ```
 
-Delay is a data type. It contains fractional numbers, like `1.4`. These numbers are base 10. Usually they are used for timers. The resolution of delay is no more that microseconds, but usually in milliseconds.
+### Delay is a data type
+
+Delay is a data type. It contains fractional numbers, like `1.4`. These numbers are base 10. Usually they are used for timers. The resolution of delay is no more than microseconds, but usually in milliseconds.
+
+### Words
 
 A *word* string is composed of one word, without any surrounding quotes, such as `testing123`
+
+### Strings
 
 Strings can have single or double quotes, or back-ticks.
 
@@ -283,53 +309,31 @@ The main difference between the single and double quoted strings is that the dou
 
 The syntax `${…}`  is used for parse-time expansion and `%{…}` is used for run-time expansion.
 
-### `checkrad`
+## Some Variables
 
-Checkrad is used by the radius server to check if its idea of a user logged in on a certain port/NAS is correct if a double login is detected.
+
+|keyword|meaning|
+|-------|-------|
+|`checkrad`| Checkrad is used by the radius server to check if its idea of a user logged in on a certain port/NAS is correct if a double login is detected.|
+|`cleanup_delay`| The time to wait (in seconds) before “cleaning up” a reply that was sent to the NAS. |
+|`hostname_lookups`| Default is no, enabled it mean DNS requests which may take super long and block other requests.|
+|`libdir`| The libdir is where to find the `rlm_*` modules.|
+|`max_request_time`|Maximum seconds to handle a request.|
+|`max_requests`| The maximum number of requests of which the server keeps track of.|
+|`panic_action`| What to do when panic. Its a string.|
+|`pidfile`| Where to store the PID of the server. To make killing it easier.|
+
+
 
 ### `cleanup_delay`
+The request and replay are usually cached intenally for a short period of time after the reply is sent to the NAS. If the packets gets lost or something, the NAS might send a re-send the request. If too low, then it’s useless. If it’s too high, then the server will cache too many requests and some new requests may get blocked (see `max_requests`).
 
-The time to wait (in seconds) before “cleaning up” a reply that was sent to the NAS.
 
-The request and replay are usually cached intenally for a short period of time after the reply is sent to the NAS. If the packets gets lost or something, the NAS might send a re-send the request.
+# Security Configuration
 
-If too low, then it’s useless.
+These directives go into a security section, like so:
 
-If it’s too high, then the server will cache too many requests and some new requests may get blocked (see `max_requests`).
-
-### `hostname_lookups`
-
-Default is no, enabled it mean DNS requests which may take super long and block other requests.
-
-### `libdir`
-
-The libdir is where to find the `rlm_*` modules.
-
-### `max_request_time`
-
-Maximum seconds to handle a request.
-
-### `max_requests`
-
-The maximum number of requests of which the server keeps track
-
-### `panic_action`
-
-What to do when panic. Its a string.
-
-### `pidfile`
-
-Where to store the PID of the server. To kill it,
-
-```yml
-kill -HUP `cat /var/run/radiusd/radiusd.pid`
 ```
-
-## Security Configuration
-
-This directives go into a security section, like so:
-
-```yml
 security {
 	...
 }
@@ -337,17 +341,10 @@ security {
 
 I left out a lot but here are some interesting ones:
 
-### `reject_delay`
-
-Seconds to wait before sending an `Access-Reject`
-
-Slows down DDoS attack and slows down brute force password cracking.
-
-### `status_server`
-
-Boolean. Whether to respond to Status-Server requests.
-
-See also: `raddb/sites-available/status`
+|||
+|---|---|
+| `reject_delay`| Seconds to wait before sending an `Access-Reject`. Slows down DDoS attack and slows down brute force password cracking.|
+|`status_server`| Boolean. Whether to respond to Status-Server requests. See also: `raddb/sites-available/status`|
 
 ## Thread pool
 
@@ -363,7 +360,7 @@ huh?
 
 Also: '0' is a special value meaning 'infinity' or 'the servers never exit'.
 
-## Virtual Servers
+# Virtual Servers
 
 A virtual server is a (nearly complete) RADIUS server.
 
@@ -371,9 +368,9 @@ FreeRADIUS can run multiple virtual servers at the same time.
 
 Virtual servers can even proxy requests to each other.
 
-The simplest way to define a virtual server would be to take all of the request processing sections from radius.conf ("authorize" , "authenticate", etc.) and wrap them in a "server {}" block.
+The simplest way to define a virtual server would be to take all of the request processing sections from `radius.conf` (`authorize` , `authenticate`, etc.) and wrap them in a `server {}` block.
 
-```yml
+```
 server foo {
 		listen {
 			ipaddr = 127.0.0.1
@@ -431,7 +428,7 @@ First preprocesses (`hints` and `huntgroups`), then does `realms`, then finally 
 
 The order of the realm modules will determine the order in which a matching realm is found. 
 
-```yml
+```
 authorize {
 	filter-username
   preprocess
@@ -511,7 +508,7 @@ If no other module has claimed responsibility for authentication, then try `pap`
 
 If `status_server = yes`, then `Status-Server` messages are passed through the following section and **only** the following section.
 
-```yml
+```
 Autz-Type Status-Server {
 
 }
@@ -534,7 +531,7 @@ The `Auth-Type` attribute can also refer to a module (e.g. `eap`) instead of a s
 
 A simple example:
 
-```yml
+```
 authenticate {
 	Auth-Type PAP {
 		pap
@@ -561,7 +558,7 @@ Session start times are **implied** in RADIUS. The NAS never sends a "start time
 
 You can create a start time with the following code:
 
-```yml
+```
 update request {
 	FreeRADIUS-Acct-Session-Start-Time = "%{expr: %l - %{%{Acct-Session-Time}:-0} - %{%{Acct-Delay-Time}:-0}}"
 }
