@@ -177,6 +177,7 @@ If anything is missing or in the wrong form?  → reject 🗑
 
 The naming of the `authorize` section is kind of misleading. This is really more like a pre-authentication step.
 
+Radius servers can also proxy requests to other servers to do the actual authentication.
 
 ## Network Access Server
 
@@ -430,7 +431,7 @@ The order of the realm modules will determine the order in which a matching real
 
 ```
 authorize {
-	filter-username
+  filter-username
   preprocess
   # operator-name
   # cui
@@ -449,7 +450,7 @@ authorize {
   files
   -sql
   # smbpasswd
-  - ldap
+  -ldap
   # daily
 	expiration
 	logintime
@@ -523,7 +524,7 @@ Note that the order of modules listed below does **not** mean “try each module
 Instead, a module from the `authorize` section adds a configuration attribute `Auth-Type := FOO`. That authentication type is then used to pick the appropriate module from the list below.
 
 The authenticate section is only used when the server is authenticating requests locally and is
-bypassed completely when proxying
+bypassed completely when proxying.
 
 This section is different from each of the other sections: it is composed of a series of subsections, only one of which is executed.
 
@@ -572,9 +573,7 @@ The `files`  module reads the `acct_user` file.
 
 The `accounting` section Iogs the accounting data.
 
-`cui` updates accounting packets by adding the `CUI` attribute from the corresponding `Access-Accept`
-
-Used for when the NAS doesn’t support CUI themselves.
+`cui` updates accounting packets by adding the `CUI` attribute from the corresponding `Access-Accept`. It's used for when the NAS doesn’t support CUI themselves.
 
 `detail` creates a ``detail``'ed log of the packets.
 
@@ -592,4 +591,9 @@ TODO
 
 ### Post-proxy Section
 
+TODO
+
+# What is an inner-tunnel
+TODO
+# What is an IdP
 TODO
