@@ -1,13 +1,13 @@
 ---
 title: RADIUS Servers and AAA Basics
-date: "2022-05-01"
-description: A simple explaination of AAA servers, specifically freeRADIUS, and how to get starting using them.
+date: "2022-05-29"
+description: A simple explaination of AAA servers, mostly freeRADIUS, and how to get started.
 tldr: FreeRadius is an OSS implementation of a RADIUS server, which is a server that implements the RADIUS protocol to achieve AAA (Authorization, Authentication, Accounting).
 draft: false
 tags: ["networking", "radius"]
 ---
 
-***free***Radius??? Maybe for you... It has cost me everything.
+> ***free***Radius??? Maybe for you... It has cost me everything.
 
 
 # What is RADIUS?
@@ -49,7 +49,8 @@ An important word to note is a NAS. A user/client/device interacts with somethin
 
 Another important word is **realm**. A realm tells radius what group/organization a user belongs to. Realms are reminisant of email addresses and are used in a somewhat similar way.
 
-The format of a realm is <SOME-STRING>@ 
+The format of a realm is `<USER-STRING>@<REALM>`.
+
 
 
 
@@ -300,7 +301,7 @@ Delay is a data type. It contains fractional numbers, like `1.4`. These numbers 
 
 ### Words
 
-A *word* string is composed of one word, without any surrounding quotes, such as `testing123`
+A *word* string is composed of one word, without any surrounding quotes, such as `iamaword123`
 
 ### Strings
 
@@ -355,11 +356,9 @@ The thread pool is a long-lived group of threads that take turns (round-robin) h
 
 Default is 0.
 
-It says: There may be memory leaks or resource allocation problems with the server. If so, set this value to approximately 300 so that the resources will be cleaned up periodically. 
+The documentation says: There may be memory leaks or resource allocation problems with the server. If so, set this value to approximately 300 so that the resources will be cleaned up periodically. Not sure what the tradeoff is... do the request after 300 get dropped?
 
-huh?
-
-Also: '0' is a special value meaning 'infinity' or 'the servers never exit'.
+Also: '0' is a special value meaning '*infinity*' or '*the servers never exit*'.
 
 # Virtual Servers
 
@@ -495,7 +494,7 @@ When using multiple kinds of realms, set `ignore_null = yes` for all of them. Ot
 
 The `eap` module takes care of `EAP-MD5`, `EAP-TLS`, and `EAP-LEAP` authentication.
 
-`unix` pulls crypt’d passwords from `/etc/passwd` or `/etc/shadow` using the system APIs to get the password
+`unix` pulls crypt’d passwords from `/etc/passwd` or `/etc/shadow` using the system APIs to get the password.
 
 `files` reads the `radbb/users` file.
 

@@ -2,27 +2,29 @@
 title: AWS Technical Essentials Course Notes
 date: "2022-05-23"
 description: Some notes I took on a beginners course in AWS.
-tldr: 
+tldr: Pretty good course IMO. (for absolute beginners).
 draft: false
 tags: ["aws"]
 ---
 
-# **Module 1: Introduction to Amazon Web Services**
+[Link to the course (it's free btw)](https://explore.skillbuilder.aws/learn/course/external/view/elearning/1851/aws-technical-essentials?dt=tile&tile=fdt)
 
+# **Module 1: Introduction to Amazon Web Services**
+ 
 ### Overview of AWS infrastructure
 
 - AWS resources are in Availability Zones
 - Availability Zones are in Regions
-- us-east-2 is a region
-- us-east-2a is an availability zone
+- `us-east-2` is a region
+- `us-east-2a` is an availability zone
 - Services are deployed at either a Global, Region, or AZ level
 - Some service require you choose an AZ
 
 ### IAM
 
-- When you create an account with email and password that’s called a root user
-- Email/password combo is one set of credentials but you get another set of credentials called access keys, they allow you to use CLI or AWS SDKs
-- Access keys have two parts: access key ID and secret access key
+- When you create an account with email and password that’s called a **root user**
+- Email/password combo is one set of credentials but you get another set of credentials called **access keys**, they allow you to use CLI or AWS SDKs
+- Access keys have two parts: **access key ID** and **secret access key**
 - IAM is global and not specific to regions
 
 ### Demo
@@ -40,11 +42,10 @@ When selecting an instance type and size, you see: `t3.medium` or `a1.large`
 - `medium` and `large` is the instance size (vCPUS, memory, etc)
 - you only get charged while in the running state, of in the stopping (preparing to hibernate)
 
-![Screen Shot 2022-05-15 at 8.53.04 AM.png](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/31cf0b30-779b-45d2-86bb-e23a8e5886e7/Screen_Shot_2022-05-15_at_8.53.04_AM.png)
 
 [Wild Rydes Web Application](https://webapp.serverlessworkshops.io/)
 
-[](https://d1.awsstatic.com/whitepapers/architecture/AWS-Serverless-Applications-Lens.pdf)
+[AWS Serverless Whitepaper](https://d1.awsstatic.com/whitepapers/architecture/AWS-Serverless-Applications-Lens.pdf)
 
 # **Module 3: AWS Networking**
 
@@ -71,35 +72,50 @@ If you only want traffic from a specific place, for example an on-premises datac
 
 **AWS reserves 5 IP addresses in each subnet.** 
 
+- 10.0.0.0: Network address.
+= 10.0.0.1: Reserved for the VPC router.
+- 10.0.0.2: The IP address of the DNS server is the base of the VPC network range plus two. 
+- 10.0.0.3: Reserved for future use. (?)
+- 10.0.0.255: Network broadcast address. AWS does not support broadcast in a VPC, so they reserve this address.
+
 **How does traffic get routed through the VPC?**
 
-When you create a VPC, AWS creates a route table called the main route table.
+When you create a VPC, AWS creates a route table called the **main route table**.
 
 A route table contains a set of rules, called routes, that are used to determine where traffic is directed.
 
 Default configuration allows traffic between all the subnets in the local network.
 
-Network Access Control List (Network ACL) can be thought of as a firewall at the subnet level. 
+**Network Access Control List (Network ACL)** can be thought of as a firewall at the subnet level. 
 
 You can use it to only allow HTTPS traffic in and out of your subnet. Remember if you make a rule to only allow HTTPS traffic in, you have to also make a rule to allow HTTPS traffic out.
 
-A NAT Gateway provides internet connectivity to instances and private subnets. A NAT gateway is a Network Address translation service. You can use a NAT gateway to so that instances in a private subnet can connect to services outside your subnet.
+A **NAT Gateway** provides internet connectivity to instances and private subnets. A NAT gateway is a **Network Address Translation** service. You can use a NAT gateway to so that instances in a private subnet can connect to services outside your subnet.
 
-The next layer of security is a Security Group. This is a firewall at the EC2 level. Security groups are not optional. The default configuration of a new security group blocks all inbound traffic and allows all outbound traffic. This ok and work s because security groups will remember if a connection if originally initiated by the EC2 instance or outside and will temporarily allow traffic to respond with modifying the inbound rules.
+The next layer of security is a **Security Group**. This is a firewall at the EC2 level. Security groups are not optional. The default configuration of a new security group blocks all inbound traffic and allows all outbound traffic. This ok and works because security groups will remember if a connection if originally initiated by the EC2 instance or outside and will temporarily allow traffic to respond with modifying the inbound rules.
 
 # **Module 4: AWS Storage**
 
-- AWS storage services are grouped into 3 categories — block storage, file storage, and object storage.
-- File storage is what it sounds like, it’s a file system. Each file has metadata like file name, file size, created date, etc. And files have paths. File storage is good when you require centralized access to file that need to be easily shared and managed by multiple host computers.
-- Block storage: splits of data into block, considers each block it’s own thing
-    - good for things that gets updated a lot because you will only need to update individual blocks not the whole thing
-- Object storage: considers each object its own thing.
+AWS storage services are grouped into 3 categories: **block storage, file storage, and object storage.**
+
+
+**File storage**: It's what it sounds like, it’s a file system. Each file has metadata like file name, file size, created date, etc. And files have paths. File storage is good when 
+you require centralized access to file that need to be easily shared and managed by multiple host computers.
+
+**Block storage**: splits of data into block, considers each block it’s own thing
+- good for things that gets updated a lot because you will only need to update individual blocks not the whole thing
+
+
+**Object storage**: considers each object its own thing.
     - WORM: write once, read many
-- EBS, elastic block storage, is like an external drive. Persistent storage.
-- EC2 instance storage it the machines drives, but are not saved when the instance is terminated.
+
+**EBS, elastic block storage**  , is like an external drive. Persistent storage.
+- EC2 instance storage in the machines drives, but are not saved when the instance is terminated.
 - Snapshots are saved from EBS as backups.
 - Unlike EBS, which requires a EC2 instance to be used, Amazon S3 is a standalone storage solution.
-- S3 is object storage. S3 objects are stored in a flat structure using unique identifiers for look up.
+
+**S3** is object storage. 
+- S3 objects are stored in a flat structure using unique identifiers for look up.
 - In S3, you store objects in buckets. This is mandatory.
 - At minimum, you need to specify 2 details: the region and the bucket name.
 - Bucket names must be unique across all AWS accounts (like in the world).
@@ -112,7 +128,6 @@ The next layer of security is a Security Group. This is a firewall at the EC2 le
 - There are 6 different S3 storage classes that are optimized for different things.
 
 You can automate automatic tier transitions with **object life cycle** management. You can choose:
-
 - Transition actions: when objects should transition to another storage class
 - Expiration actions: when objects expire and should be permanently deleted
 

@@ -1,7 +1,7 @@
 ---
 title: AWS CDK Basics
 date: "2022-07-20"
-description: A quick guide on getting started with AWS Cloud Development Kits
+description: Talking notes for an AWS CDK workshop.
 draft: false
 tags: ["aws", "devops"]
 ---
@@ -16,25 +16,24 @@ You’re most likely not self-hosting, and instead using some kind of cloud prov
 
 Something like: AWS, GCP, Digital Ocean, Linode… etc.
 
-What are the kinds of services you need?
+What are the kinds of services you need? 
 
-| Domain Name | Route53 |
-| --- | --- |
-| SSL  | Certificate Manager |
-| CDN | CloudFront |
-| Static Site Hosting | S3 |
-| Database | RDS, Dynamo, Aurora, a million others |
-| Authentication | Cognito |
-| REST API | API Gateway |
-| Business Logic Stuff | Lambda, EC2 |
-| Container management | ECR |
+| Domain Name          | Route53                  |
+| -------------------- | ------------------------ |
+| SSL                  | Certificate Manager      |
+| CDN                  | CloudFront               |
+| Static Assets, etc   | S3                       |
+| Database             | RDS, Dynamo, Aurora, etc |
+| Authentication       | Cognito                  |
+| REST API             | API Gateway              |
+| Business Logic Stuff | Lambda, EC2              |
+| Container management | ECR                      |
 
 You also probably want a Dev, Stag, and Prod stack.
 
 So a CDK is code that you write, which generates CloudFormation Templates (JSON or YAML), which you push to AWS CloudFormation, and then that builds your AWS infrastructure.
 
 And CloudFormation Templates are ANNOYING. 
-
  
 
 # How to start a CDK project
@@ -43,7 +42,7 @@ Get the code: `git checkout v1`
 
 Every CDK app should be in its own directory.
 
-For this tutorial, all my code is in `BackendGuild`. So I did:
+For this tutorial, all my code is in `/BackendGuild`. So I did:
 
 ```bash
 mkdir CDKWorkshop
@@ -195,9 +194,7 @@ And then run `cdk diff`:
 
 # What else can you do?
 
-Check the docs: 
-
-[class Bucket (construct) · AWS CDK](https://docs.aws.amazon.com/cdk/api/v2/docs/aws-cdk-lib.aws_s3.Bucket.html)
+Check the docs: [class Bucket (construct) · AWS CDK](https://docs.aws.amazon.com/cdk/api/v2/docs/aws-cdk-lib.aws_s3.Bucket.html)
 
 # Important Commands
 
@@ -311,7 +308,7 @@ export class CdkWorkshopStack extends cdk.Stack {
 
 # Using CDK watch
 
-- since it is a typescript project and we are using javascript in the lambda function, we have to update `cdk.json` to not exclude the files
+Note: since it is a typescript project and we are using javascript in the lambda function, we have to update `cdk.json` to not exclude the files
 
 # Adding REST trigger
 
@@ -380,7 +377,7 @@ Not a “full” programming language. It’s kinda like Jsonnet.
 
 CUE is written in Go.
 
-The CUE language has an unusual property which sets it apart from many other languages and formats - types and values are the same. *Not the same as only same type of structure, like JSON and JSON Schema,* ***but actually the same*.**
+> The CUE language has an unusual property which sets it apart from many other languages and formats - types and values are the same. *Not the same as only same type of structure, like JSON and JSON Schema,* ***but actually the same*.**
 
 An aws example I found:
 

@@ -4,7 +4,7 @@ date: "2022-04-14"
 description: How to install grpcio on an M1.
 tldr: You need some flags
 draft: false
-tags: ["grpc", "python"]
+tags: ["grpc", "python", "apple-silicon"]
 ---
 
 

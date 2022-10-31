@@ -49,7 +49,7 @@ tags: ["kafka", "golang", "protobuf"]
 Go isn't actually one of the languages the protobuf compiler (protoc) supports by default, so you have to download a Go plugin, called `protogen-go`. There are two versions available, the `github.com` one is depreciated, so use the `google.com` one. We'll talk about this more later.
 
 
-```
+```bash
 go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
 ``` 
 
@@ -61,12 +61,12 @@ Go to this web page:` https://github.com/protocolbuffers/protobuf/releases/` and
 Once you download it, unzip into a directory called protoc (that's what the -d flag is doing). But this is just for you, you can put this anywhere and name it anything.
 
 
-``` 
+```bash
 unzip -d protoc/ protoc-3.19.4-linux-x86_64.zip
 ```
 After unzipping, your protoc directory should look like this:
 
-```
+```bash
 .
 ├── bin
 │   └── protoc
@@ -78,7 +78,7 @@ After unzipping, your protoc directory should look like this:
 ``` 
 As advised by the `readme.txt`, copy the content of the include directory to `/usr/local/include` and the protoc binary to somewhere like `/usr/bin`.
 
-```
+```bash
 sudo cp -r include/google /usr/local/include
 sudo cp bin/protoc /usr/bin
 ```
@@ -95,7 +95,7 @@ I tried a slew of things, but I continued to have issues with `protoc` and paths
 -  and finally `protoc`, which is the compiler's executable binary.
 
 Here's what all that looks like:
-```
+```bash
 .
 ├── go-application
 │   ├── go.mod
@@ -114,7 +114,7 @@ Here's what all that looks like:
     └── protoc
 ```
 So I create my protobuf generated classes directly in `protobuf-generator`, and then slap them into `go-application/proto-definitions`. I actually wrote a little bash script to make feel cleaner and to somewhat automate it. I called it something like `run_protoc.sh`, and it contains:
-```
+```bash
 if protoc -I ./ --go_out=./ ./example.proto; then
 	cp example.pb.go ../go-application/proto-definitions
 	cp example.proto ../go-application/proto-definitions # so that .proto is in your app's repo
@@ -124,12 +124,12 @@ else
 fi
 ``` 
 To run it, `chmod` it (so it's executable) and then run like a regular script.
-```
+```bash
 chmod a+x run_protoc.sh  # do this once
 ./run_protoc.sh   # do this whenever you update example.proto
 ```
 And then for example, to reference the message definitions in `main.go` I have:
-```
+```go
 import (
 	"fmt"
 	.
@@ -150,7 +150,7 @@ To clarify  -- because this is a mess --  these are what the paths look 
 ~/go/src/github.com/mygithub/protobuf-generator
 ```
 And don't forget to double check your Go environment variables are correct and exist (don't ask me why I didn't just have this in my `.zshrc`, I don't have an answer. But they are in there now).
-```
+```bash
 export GOROOT=/usr/local/go
 export GOPATH=$HOME/<go-project-dir>
 export GOBIN=$GOPATH/bin
@@ -193,15 +193,15 @@ message AddressBook {
 `package` will be the name of the folder where the `<example>.pb.go` file will live. If you are following what I've been doing it's `proto-definitions`. 
 
 So now to compile:
-```
-$ protoc -I ./ --go_out=./ ./example.proto
+```bash
+protoc -I ./ --go_out=./ ./example.proto
 ```
 - `-I` is the source directory
 - `--go_out` is telling `protoc` you want go code, the directory where it should go
 
 For the most part it's really easy, but I have not needed to do anything complex with them yet. For general information on defining message types see: https://developers.google.com/protocol-buffers/docs/gotutorial
 
->  💡 **I repeat, look at this:** [developers.google.com/protocol-buffers](https://developers.google.com/protocol-buffers/docs/gotutorial) I don't explain much on this stuff.
+>  💡 **for real, look at this:** [developers.google.com/protocol-buffers](https://developers.google.com/protocol-buffers/docs/gotutorial) It's explained really well.
 
 And you're all done with setup, now you have your protobuf class ready and you can begin using protobufs within your project!
 
@@ -253,7 +253,7 @@ The have to have one at 0, because 0 is the default and everything must have a d
 
 Suppose you get some input/data from somewhere with "HELLO" in it, and that's what you want to set your enum field to, you can go this:
 
-```
+```go
 data := "HELLO"
 msg := &pb.Convo{}
 msg.MyGreeting = pb.Convo_GreetingType(pb.convo_GreetingType_value[data])
@@ -264,14 +264,14 @@ fmt.Printf("I said: %s\n", msg.GetMyGreeting())
 ## Printing messages
 If you want to see everything that's in your message then do this:
 
-```
+```go
 fmt.Printf("My Message:  %s\n",  proto.Message(msg)) 
 // output: My Message: MyGreeting:HELLO
 ```
 
 ## Serializing Messages
 
-```
+```go
 msg := &pb.ExampleType{}
 // .... do some things with msg
 buff, err := proto.Marshal(msg)
@@ -279,7 +279,7 @@ buff, err := proto.Marshal(msg)
 
 ## Deserializing Messages
 
-```
+```go
 serialized_data := // ..... 
 msg := &pb.ExampleType{}
 proto.Unmarshal(serialized_data, msg)
@@ -288,7 +288,7 @@ proto.Unmarshal(serialized_data, msg)
 
 ## Protobufs in Kafka messages
 
-```
+```go
 // .................... 
 // Subscriber
 kafka_msg, err := consumer.ReadMessage()
@@ -309,7 +309,7 @@ err = producer.Produce(&kafka.Message{ TopicPartition: my_partition,
 
 I haven't done this yet, and it may be a while before I do. I am rewriting the backend of an app and I am going to use the corresponding frontend which expects JSON. This is actually maybe not a great idea to be honest because according to the `protojson` documentation, the conversion from `proto.Message` to `JSON` via `protojson.Marshal` is not stable, and it recommends to not rely on it. But anyhoo this is what I do:
 
-```
+```go
 msg :=  // serialized Kafka message, it contains message with ExampleType structure
 
 example := &pb.ExampleType{} 

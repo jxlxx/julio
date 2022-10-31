@@ -4,7 +4,7 @@ date: "2022-04-14"
 description: How to install confluent-kafka on an M1.
 draft: false
 tldr: You need to build `librdkafka` locally, and then install `confluent-kafka` with some flags specifying where to look for the `librdkafka` dylibs.
-tags: ["kafka", "python"]
+tags: ["kafka", "python", "apple-silicon"]
 ---
 
 # `Librdkafka`
